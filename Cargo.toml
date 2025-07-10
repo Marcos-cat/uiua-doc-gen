@@ -9,7 +9,7 @@ readme = "README.md"
 keywords = ["cli", "documentation", "generator", "uiua"]
 
 [dependencies]
-uiua = "0.17.0-dev.1"
+uiua = { git = "https://github.com/uiua-lang/uiua", branch = "main" }
 clap = "4.5.20"
 thiserror = "2.0.3"
 same-file = "1.0.6"
