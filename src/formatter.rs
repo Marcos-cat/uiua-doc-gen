@@ -57,7 +57,7 @@ fn sig_class(sig: Signature) -> &'static str {
     }
 }
 
-fn prim_sig_class(prim: Primitive, subscript: Option<Subscript>) -> &'static str {
+fn prim_sig_class(prim: Primitive, subscript: Option<&Subscript>) -> &'static str {
     match prim {
         Primitive::Identity => "stack-function",
         prim if matches!(prim.class(), PrimClass::Stack | PrimClass::Debug) && prim.modifier_args().is_none() => "stack-function",
@@ -182,14 +182,14 @@ pub fn format_source_code(code: &str, compiler: &Compiler) -> String {
                 CodeFragment::Br => frag_views.push(view! { <br /> }.into_view()),
                 CodeFragment::Span(text, kind) => {
                     let color_class: String = match &kind {
-                        SpanKind::Primitive(prim, sig) => prim_sig_class(*prim, *sig).to_string(),
+                        SpanKind::Primitive(prim, sig) => prim_sig_class(*prim, sig.as_ref()).to_string(),
                         SpanKind::Obverse(_) => prim_sig_class(Primitive::Obverse, None).to_string(),
                         SpanKind::Number => "number-literal".to_string(),
                         SpanKind::String | SpanKind::ImportSrc(_) => "string-literal-span".to_string(),
                         SpanKind::Comment | SpanKind::OutputComment => "comment-span".to_string(),
                         SpanKind::Strand => "strand-span".to_string(),
                         SpanKind::Subscript(None, _) => "number-literal".to_string(),
-                        SpanKind::Subscript(Some(prim), n) => prim_sig_class(*prim, *n).to_string(),
+                        SpanKind::Subscript(Some(prim), n) => prim_sig_class(*prim, n.as_ref()).to_string(),
                         SpanKind::MacroDelim(margs) => modifier_class(*margs).to_string(),
                         SpanKind::ArgSetter(_) => sig_class((1, 0).into()).to_string(),
                         SpanKind::Ident { docs: Some(docs), .. } => binding_class(&docs).to_string(),
